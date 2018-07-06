@@ -27,7 +27,7 @@ import static java.util.stream.Collectors.toList;
 @RequestMapping("/posts")
 public class PostController {
 
-    final private PostService postService;
+    private final PostService postService;
 
     @GetMapping
     public List<PostDto> list() {

@@ -15,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostService {
 
-    final private PostRepository postRepository;
+    private final PostRepository postRepository;
 
     public List<Post> getAll() {
         return postRepository.findByDeleted(false);

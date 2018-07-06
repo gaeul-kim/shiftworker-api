@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import shiftworker.community.domain.User;
-import shiftworker.community.exception.DuplicatedUsernameException;
-import shiftworker.community.exception.UnAuthenticationException;
 import shiftworker.community.service.UserService;
 import shiftworker.community.util.JwtHelper;
 
@@ -23,16 +21,16 @@ import shiftworker.community.util.JwtHelper;
 @RequestMapping("/users")
 public class UserController {
 
-    final private UserService userService;
+    private final UserService userService;
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    public String join(@RequestBody UserDto userDto) throws DuplicatedUsernameException {
+    public String join(@RequestBody UserDto userDto) {
         return createUserJwt(userService.create(userDto.toUser()));
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody UserDto userDto) throws UnAuthenticationException {
+    public String login(@RequestBody UserDto userDto) {
         return createUserJwt(userService.login(userDto.getUsername(), userDto.getPassword()));
     }
 
