@@ -15,21 +15,21 @@ import shiftworker.community.repository.UserRepository;
 @RequiredArgsConstructor
 public class UserService {
 
-    final private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    public User create(User user) throws DuplicatedUsernameException {
+    public User create(User user) {
         verifyDuplicateUsername(user.getUsername());
         user.hashPassword();
         return userRepository.save(user);
     }
 
-    private void verifyDuplicateUsername(String username) throws DuplicatedUsernameException {
+    private void verifyDuplicateUsername(String username) {
         if (userRepository.findByUsername(username).isPresent()) {
             throw new DuplicatedUsernameException();
         }
     }
 
-    public User login(String username, String password) throws UnAuthenticationException {
+    public User login(String username, String password) {
         User user = userRepository.findByUsername(username).orElseThrow(UnAuthenticationException::new);
         if (!user.matchPassword(password)) {
             throw new UnAuthenticationException();
