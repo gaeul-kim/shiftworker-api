@@ -53,6 +53,7 @@ public class PostController {
 
         PostDto(Post post) {
             this.title = post.getTitle();
+            this.content = post.getContent();
             this.author = post.getAuthor().getUsername();
         }
 
