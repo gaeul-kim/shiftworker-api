@@ -7,6 +7,8 @@ import org.springframework.util.StringUtils;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import java.util.List;
 
 /**
  * @author sangsik.kim
@@ -25,7 +27,12 @@ public class Post extends BaseEntity {
     @ManyToOne(targetEntity = User.class)
     private User author;
 
+    @OneToMany(targetEntity = Comment.class, mappedBy = "post")
+    private List<Comment> comments;
+
     private boolean deleted;
+
+    private int viewCount;
 
     public Post(String title, String content) {
         setTitle(title);
@@ -54,6 +61,10 @@ public class Post extends BaseEntity {
 
     private void setDeletedFalse() {
         this.deleted = false;
+    }
+
+    private void increaseViewCount() {
+        this.viewCount++;
     }
 
 }
