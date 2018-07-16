@@ -1,6 +1,8 @@
 package shiftworker.community.controller;
 
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -37,20 +39,20 @@ public class PostController {
     public List<PostDto> getPosts() {
         return postService.getAll()
                 .stream()
-                .map(PostDto::new)
+                .map(PostDto::of)
                 .collect(toList());
     }
 
     @PostMapping
     public Post writePost(@LoginUser User user, @RequestBody PostDto postDto) {
-        return postService.write(postDto.toPost(), user);
+        return postService.write(new Post(postDto.getTitle(), postDto.getContent()), user);
     }
 
     @GetMapping("/{id}/comments")
     public List<CommentDto> getComments(@PathVariable long id) {
         return commentService.getAllByPostId(id)
                 .stream()
-                .map(CommentDto::new)
+                .map(CommentDto::of)
                 .collect(toList());
     }
 
@@ -63,40 +65,49 @@ public class PostController {
                         .post(post)
                         .content(commentDto.getContent())
                         .build());
-        return new CommentDto(comment);
+        return CommentDto.of(comment);
     }
 
     @Getter
     @Setter
+    @Builder
+    @AllArgsConstructor
     @NoArgsConstructor
     public static class PostDto {
         private String title;
         private String content;
+        private String createdDate;
+        private String viewCount;
         @ApiModelProperty(hidden = true)
         private String author;
 
-        PostDto(Post post) {
-            this.title = post.getTitle();
-            this.content = post.getContent();
-            this.author = post.getAuthor().getUsername();
-        }
-
-        Post toPost() {
-            return new Post(this.title, this.content);
+        static PostDto of(Post post) {
+            return PostDto.builder()
+                    .title(post.getTitle())
+                    .author(post.getAuthor().getUsername())
+                    .createdDate(post.getFormattedCreateDate())
+                    .viewCount(String.valueOf(post.getViewCount()))
+                    .build();
         }
     }
 
     @Getter
     @Setter
+    @Builder
+    @AllArgsConstructor
     @NoArgsConstructor
     public static class CommentDto {
         private String content;
+        private String createdDate;
         @ApiModelProperty(hidden = true)
         private String author;
 
-        CommentDto(Comment comment) {
-            this.content = comment.getContent();
-            this.author = comment.getAuthor().getUsername();
+        static CommentDto of(Comment comment) {
+            return CommentDto.builder()
+                    .content(comment.getContent())
+                    .author(comment.getAuthor().getUsername())
+                    .createdDate(comment.getFormattedCreateDate())
+                    .build();
         }
     }
 }
