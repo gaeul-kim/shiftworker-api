@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import shiftworker.community.domain.Post;
 import shiftworker.community.domain.User;
+import shiftworker.community.exception.PostNotFoundException;
 import shiftworker.community.repository.PostRepository;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 /**
@@ -20,7 +20,7 @@ public class PostService {
 
     public Post getById(long id) {
         return postRepository.findByIdAndDeleted(id, false)
-                .orElseThrow(EntityNotFoundException::new);
+                .orElseThrow(PostNotFoundException::new);
     }
 
     public List<Post> getAll() {

@@ -43,6 +43,12 @@ public class PostController {
                 .collect(toList());
     }
 
+    @GetMapping("/{id}")
+    public PostDto getPost(@PathVariable long id) {
+        return PostDto.of(postService.getById(id));
+
+    }
+
     @PostMapping
     public Post writePost(@LoginUser User user, @RequestBody PostDto postDto) {
         return postService.write(new Post(postDto.getTitle(), postDto.getContent()), user);
