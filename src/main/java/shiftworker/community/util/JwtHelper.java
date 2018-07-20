@@ -16,7 +16,10 @@ import java.util.Date;
 @Slf4j
 public class JwtHelper {
     private static final String SECRET = "DEFAULT_KEY";
-    public static final int DEFAULT_EXPIRATION_DATE = 10;
+    private static final int DEFAULT_EXPIRATION_DATE = 10;
+
+    private JwtHelper() {
+    }
 
     public static <T> String create(String key, T data) {
         return Jwts.builder()
