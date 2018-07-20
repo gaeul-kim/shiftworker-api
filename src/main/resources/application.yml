@@ -1,4 +1,17 @@
+# local
+---
 spring:
+  profiles: local
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
   h2:
     console:
       enabled: true
+
+# live
+---
+spring.profiles: live
+spring:
+  profiles.include: live-db
