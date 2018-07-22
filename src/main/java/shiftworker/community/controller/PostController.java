@@ -80,19 +80,21 @@ public class PostController {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class PostDto {
+        private long id;
         private String title;
         private String content;
         private String createdDate;
-        private String viewCount;
+        private int viewCount;
         @ApiModelProperty(hidden = true)
         private String author;
 
         static PostDto of(Post post) {
             return PostDto.builder()
+                    .id(post.getId())
                     .title(post.getTitle())
                     .author(post.getAuthor().getUsername())
                     .createdDate(post.getFormattedCreateDate())
-                    .viewCount(String.valueOf(post.getViewCount()))
+                    .viewCount(post.getViewCount())
                     .build();
         }
     }
