@@ -30,7 +30,8 @@ public class PostService {
     }
 
     public List<Post> getAll() {
-        return postRepository.findByDeleted(false);
+        // todo : app 요구사항 추가시 Pageable 변경
+        return postRepository.findByDeletedOrderByCreatedDateDesc(false);
     }
 
     public Post write(Post post, User user) {
