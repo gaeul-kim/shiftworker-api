@@ -2,6 +2,7 @@ package shiftworker.community.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import shiftworker.community.domain.Post;
 import shiftworker.community.domain.User;
 import shiftworker.community.exception.PostNotFoundException;
@@ -21,6 +22,11 @@ public class PostService {
     public Post getById(long id) {
         return postRepository.findByIdAndDeleted(id, false)
                 .orElseThrow(PostNotFoundException::new);
+    }
+
+    @Transactional
+    public Post getByIdAndIncreaseViewCount(long id) {
+        return getById(id).increaseViewCount();
     }
 
     public List<Post> getAll() {

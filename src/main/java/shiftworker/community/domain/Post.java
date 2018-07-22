@@ -63,8 +63,8 @@ public class Post extends BaseEntity {
         this.deleted = false;
     }
 
-    private void increaseViewCount() {
+    public Post increaseViewCount() {
         this.viewCount++;
+        return this;
     }
-
 }

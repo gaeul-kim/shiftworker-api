@@ -45,7 +45,7 @@ public class PostController {
 
     @GetMapping("/{id}")
     public PostDto getPost(@PathVariable long id) {
-        return PostDto.of(postService.getById(id));
+        return PostDto.of(postService.getByIdAndIncreaseViewCount(id));
 
     }
 
