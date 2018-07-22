@@ -39,7 +39,7 @@ public class PostController {
     public List<PostDto> getPosts() {
         return postService.getAll()
                 .stream()
-                .map(PostDto::of)
+                .map(PostDto::withoutContent)
                 .collect(toList());
     }
 
@@ -89,6 +89,17 @@ public class PostController {
         private String author;
 
         static PostDto of(Post post) {
+            return PostDto.builder()
+                    .id(post.getId())
+                    .title(post.getTitle())
+                    .content(post.getContent())
+                    .author(post.getAuthor().getUsername())
+                    .createdDate(post.getFormattedCreateDate())
+                    .viewCount(post.getViewCount())
+                    .build();
+        }
+
+        static PostDto withoutContent(Post post) {
             return PostDto.builder()
                     .id(post.getId())
                     .title(post.getTitle())
