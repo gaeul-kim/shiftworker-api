@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,8 +39,8 @@ public class PostController {
     private final CommentService commentService;
 
     @GetMapping
-    public List<PostDto> getPosts() {
-        return postService.getAll()
+    public List<PostDto> getPosts(@PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        return postService.getAll(pageable)
                 .stream()
                 .map(PostDto::withoutContent)
                 .collect(toList());
@@ -85,6 +88,7 @@ public class PostController {
         private String content;
         private String createdDate;
         private int viewCount;
+        private int commentsCount;
         @ApiModelProperty(hidden = true)
         private String author;
 
@@ -96,6 +100,7 @@ public class PostController {
                     .author(post.getAuthor().getUsername())
                     .createdDate(post.getFormattedCreateDate())
                     .viewCount(post.getViewCount())
+                    .commentsCount(post.getComments().size())
                     .build();
         }
 
@@ -106,6 +111,7 @@ public class PostController {
                     .author(post.getAuthor().getUsername())
                     .createdDate(post.getFormattedCreateDate())
                     .viewCount(post.getViewCount())
+                    .commentsCount(post.getComments().size())
                     .build();
         }
     }

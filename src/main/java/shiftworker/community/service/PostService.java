@@ -1,14 +1,14 @@
 package shiftworker.community.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shiftworker.community.domain.Post;
 import shiftworker.community.domain.User;
 import shiftworker.community.exception.PostNotFoundException;
 import shiftworker.community.repository.PostRepository;
-
-import java.util.List;
 
 /**
  * @author sangsik.kim
@@ -29,9 +29,8 @@ public class PostService {
         return getById(id).increaseViewCount();
     }
 
-    public List<Post> getAll() {
-        // todo : app 요구사항 추가시 Pageable 변경
-        return postRepository.findByDeletedOrderByCreatedDateDesc(false);
+    public Page<Post> getAll(Pageable pageable) {
+        return postRepository.findByDeletedFalse(pageable);
     }
 
     public Post write(Post post, User user) {
