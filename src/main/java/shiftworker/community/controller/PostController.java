@@ -15,11 +15,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import shiftworker.community.annotation.LoginUser;
 import shiftworker.community.domain.Comment;
 import shiftworker.community.domain.Post;
 import shiftworker.community.domain.User;
+import shiftworker.community.domain.type.SearchType;
 import shiftworker.community.service.CommentService;
 import shiftworker.community.service.PostService;
 
@@ -39,8 +41,10 @@ public class PostController {
     private final CommentService commentService;
 
     @GetMapping
-    public List<PostDto> getPosts(@PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
-        return postService.getAll(pageable)
+    public List<PostDto> getPosts(@PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable,
+                                  @RequestParam(required = false, defaultValue = "NONE") SearchType searchType,
+                                  @RequestParam(required = false, defaultValue = "") String keyword) {
+        return postService.getAll(searchType, keyword, pageable)
                 .stream()
                 .map(PostDto::withoutContent)
                 .collect(toList());
