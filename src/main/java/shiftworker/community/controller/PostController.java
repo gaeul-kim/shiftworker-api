@@ -87,12 +87,23 @@ public class PostController {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class PostDto {
+
+        @ApiModelProperty(hidden = true)
         private long id;
+
         private String title;
+
         private String content;
+
+        @ApiModelProperty(hidden = true)
         private String createdDate;
+
+        @ApiModelProperty(hidden = true)
         private int viewCount;
+
+        @ApiModelProperty(hidden = true)
         private int commentsCount;
+
         @ApiModelProperty(hidden = true)
         private String author;
 
@@ -126,8 +137,11 @@ public class PostController {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class CommentDto {
+
         private String content;
+
         private String createdDate;
+
         @ApiModelProperty(hidden = true)
         private String author;
 
