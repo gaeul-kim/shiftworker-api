@@ -18,16 +18,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import shiftworker.community.annotation.LoginUser;
-import shiftworker.community.domain.Comment;
 import shiftworker.community.domain.Post;
 import shiftworker.community.domain.User;
 import shiftworker.community.domain.type.SearchType;
-import shiftworker.community.service.CommentService;
 import shiftworker.community.service.PostService;
 
+import java.util.Collections;
 import java.util.List;
 
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
+import static shiftworker.community.controller.CommentController.CommentDto;
 
 /**
  * @author sangsik.kim
@@ -38,7 +39,6 @@ import static java.util.stream.Collectors.toList;
 public class PostController {
 
     private final PostService postService;
-    private final CommentService commentService;
 
     @GetMapping
     public List<PostDto> getPosts(@PageableDefault(size = 20, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable,
@@ -51,34 +51,14 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public PostDto getPost(@PathVariable long id) {
-        return PostDto.of(postService.getByIdAndIncreaseViewCount(id));
+    public PostDto getPost(@PathVariable long id, @RequestParam(required = false, defaultValue = "FALSE") boolean comments) {
+        return PostDto.of(postService.getByIdAndIncreaseViewCount(id), comments);
 
     }
 
     @PostMapping
     public Post writePost(@LoginUser User user, @RequestBody PostDto postDto) {
-        return postService.write(new Post(postDto.getTitle(), postDto.getContent()), user);
-    }
-
-    @GetMapping("/{id}/comments")
-    public List<CommentDto> getComments(@PathVariable long id) {
-        return commentService.getAllByPostId(id)
-                .stream()
-                .map(CommentDto::of)
-                .collect(toList());
-    }
-
-    @PostMapping("/{id}/comments")
-    public CommentDto addComment(@PathVariable long id, @LoginUser User user, @RequestBody CommentDto commentDto) {
-        Post post = postService.getById(id);
-        Comment comment = commentService.add(
-                Comment.builder()
-                        .author(user)
-                        .post(post)
-                        .content(commentDto.getContent())
-                        .build());
-        return CommentDto.of(comment);
+        return postService.write(Post.of(postDto.getTitle(), postDto.getContent()), user);
     }
 
     @Getter
@@ -107,7 +87,9 @@ public class PostController {
         @ApiModelProperty(hidden = true)
         private String author;
 
-        static PostDto of(Post post) {
+        private List<CommentDto> comments;
+
+        static PostDto of(Post post, boolean comments) {
             return PostDto.builder()
                     .id(post.getId())
                     .title(post.getTitle())
@@ -116,6 +98,11 @@ public class PostController {
                     .createdDate(post.getFormattedCreateDate())
                     .viewCount(post.getViewCount())
                     .commentsCount(post.getComments().size())
+                    .comments(comments ? post.getComments()
+                            .stream()
+                            .map(CommentDto::of)
+                            .sorted(comparing(CommentDto::getId).thenComparing(CommentDto::getCreatedDate).reversed())
+                            .collect(toList()) : Collections.emptyList())
                     .build();
         }
 
@@ -123,33 +110,12 @@ public class PostController {
             return PostDto.builder()
                     .id(post.getId())
                     .title(post.getTitle())
+                    .content("")
                     .author(post.getAuthor().getUsername())
                     .createdDate(post.getFormattedCreateDate())
                     .viewCount(post.getViewCount())
                     .commentsCount(post.getComments().size())
-                    .build();
-        }
-    }
-
-    @Getter
-    @Setter
-    @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class CommentDto {
-
-        private String content;
-
-        private String createdDate;
-
-        @ApiModelProperty(hidden = true)
-        private String author;
-
-        static CommentDto of(Comment comment) {
-            return CommentDto.builder()
-                    .content(comment.getContent())
-                    .author(comment.getAuthor().getUsername())
-                    .createdDate(comment.getFormattedCreateDate())
+                    .comments(Collections.emptyList())
                     .build();
         }
     }

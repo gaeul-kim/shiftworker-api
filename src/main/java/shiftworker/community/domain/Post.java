@@ -34,10 +34,14 @@ public class Post extends BaseEntity {
 
     private int viewCount;
 
-    public Post(String title, String content) {
+    private Post(String title, String content) {
         setTitle(title);
         setContent(content);
-        setDeletedFalse();
+        this.deleted = false;
+    }
+
+    public static Post of(String title, String content) {
+        return new Post(title, content);
     }
 
     public Post setAuthor(User author) {
@@ -57,10 +61,6 @@ public class Post extends BaseEntity {
             throw new IllegalArgumentException("내용이 입력되지 않았습니다");
         }
         this.content = content;
-    }
-
-    private void setDeletedFalse() {
-        this.deleted = false;
     }
 
     public Post increaseViewCount() {

@@ -1,10 +1,9 @@
 package shiftworker.community.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,8 +15,6 @@ import javax.persistence.ManyToOne;
  */
 @Getter
 @Entity
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
 public class Comment extends BaseEntity {
 
@@ -31,4 +28,24 @@ public class Comment extends BaseEntity {
 
     @ManyToOne(targetEntity = User.class)
     private User author;
+
+    private boolean deleted;
+
+    private Comment(Post post, User author, String content) {
+        this.post = post;
+        this.author = author;
+        this.deleted = false;
+        setContent(content);
+    }
+
+    public static Comment of(Post post, User author, String content) {
+        return new Comment(post, author, content);
+    }
+
+    private void setContent(String content) {
+        if (StringUtils.isEmpty(content)) {
+            throw new IllegalArgumentException("내용이 입력되지 않았습니다");
+        }
+        this.content = content;
+    }
 }
