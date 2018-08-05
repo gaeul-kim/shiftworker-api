@@ -105,7 +105,7 @@ public class PostController {
                             .stream()
                             .filter(comment -> !comment.isDeleted())
                             .map(CommentDto::of)
-                            .sorted(comparing(CommentDto::getId).thenComparing(CommentDto::getCreatedDate).reversed())
+                            .sorted(comparing(CommentDto::getId).thenComparing(CommentDto::getCreatedDate))
                             .collect(toList()) : Collections.emptyList())
                     .build();
         }
