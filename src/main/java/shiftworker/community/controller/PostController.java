@@ -1,5 +1,6 @@
 package shiftworker.community.controller;
 
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -57,6 +58,7 @@ public class PostController {
     }
 
     @PostMapping
+    @ApiImplicitParam(name = "Authorization", value = "사용자 인증 토큰", required = true, dataType = "String", paramType = "header")
     public Post writePost(@LoginUser User user, @RequestBody PostDto postDto) {
         return postService.write(Post.of(postDto.getTitle(), postDto.getContent()), user);
     }
@@ -87,6 +89,7 @@ public class PostController {
         @ApiModelProperty(hidden = true)
         private String author;
 
+        @ApiModelProperty(hidden = true)
         private List<CommentDto> comments;
 
         static PostDto of(Post post, boolean comments) {
