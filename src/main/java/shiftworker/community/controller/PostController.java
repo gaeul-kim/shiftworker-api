@@ -59,8 +59,8 @@ public class PostController {
 
     @PostMapping
     @ApiImplicitParam(name = "Authorization", value = "사용자 인증 토큰", required = true, dataType = "String", paramType = "header")
-    public Post writePost(@LoginUser User user, @RequestBody PostDto postDto) {
-        return postService.write(Post.of(postDto.getTitle(), postDto.getContent()), user);
+    public PostDto writePost(@LoginUser User user, @RequestBody PostDto postDto) {
+        return PostDto.of(postService.write(Post.of(postDto.getTitle(), postDto.getContent()), user), false);
     }
 
     @Getter
