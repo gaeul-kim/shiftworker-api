@@ -25,6 +25,7 @@ import shiftworker.community.service.PostService;
 
 import java.util.List;
 
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -44,6 +45,7 @@ public class CommentController {
         return commentService.getAllByPostId(postId, pageable)
                 .stream()
                 .map(CommentDto::of)
+                .sorted(comparing(CommentDto::getId).thenComparing(CommentDto::getCreatedDate))
                 .collect(toList());
     }
 
