@@ -26,15 +26,15 @@ public class BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    protected long id;
 
     @JsonIgnore
     @CreatedDate
-    private LocalDateTime createdDate;
+    protected LocalDateTime createdDate;
 
     @JsonIgnore
     @LastModifiedDate
-    private LocalDateTime modifiedDate;
+    protected LocalDateTime modifiedDate;
 
     @JsonIgnore
     public String getFormattedCreateDate() {
