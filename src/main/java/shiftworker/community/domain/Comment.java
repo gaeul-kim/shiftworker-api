@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.StringUtils;
+import shiftworker.community.exception.UnAuthenticationException;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -45,5 +46,12 @@ public class Comment extends BaseEntity {
             throw new IllegalArgumentException("내용이 입력되지 않았습니다");
         }
         this.content = content;
+    }
+
+    public void delete(User user) {
+        if (!this.author.matchUsername(user)) {
+            throw new UnAuthenticationException();
+        }
+        this.deleted = true;
     }
 }

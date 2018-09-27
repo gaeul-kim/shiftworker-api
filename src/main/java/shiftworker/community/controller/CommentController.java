@@ -11,7 +11,10 @@ import lombok.Setter;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,6 +56,12 @@ public class CommentController {
     @ApiImplicitParam(name = "Authorization", value = "사용자 인증 토큰", required = true, dataType = "String", paramType = "header")
     public CommentDto addComment(@LoginUser User user, @RequestBody CommentDto commentDto) {
         return CommentDto.of(commentService.add(Comment.of(postService.getById(commentDto.getPostId()), user, commentDto.getContent())));
+    }
+
+    @DeleteMapping("/{id}")
+    public HttpStatus deleteComment(@LoginUser User user, @PathVariable long id) {
+        commentService.delete(id, user);
+        return HttpStatus.NO_CONTENT;
     }
 
     @Getter

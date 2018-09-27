@@ -4,7 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import shiftworker.community.domain.Comment;
+import shiftworker.community.domain.User;
+import shiftworker.community.exception.CommentNotFoundException;
 import shiftworker.community.repository.CommentRepository;
 
 /**
@@ -22,5 +25,15 @@ public class CommentService {
 
     public Comment add(Comment comment) {
         return commentRepository.save(comment);
+    }
+
+    public Comment getById(long id) {
+        return commentRepository.findByIdAndDeletedFalse(id)
+                .orElseThrow(CommentNotFoundException::new);
+    }
+
+    @Transactional
+    public void delete(long id, User user) {
+        getById(id).delete(user);
     }
 }
