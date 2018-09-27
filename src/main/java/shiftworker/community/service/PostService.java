@@ -49,4 +49,9 @@ public class PostService {
     public void delete(long id, User user) {
         getById(id).delete(user);
     }
+
+    @Transactional
+    public Post update(long id, Post post, User user) {
+        return getById(id).update(post, user);
+    }
 }

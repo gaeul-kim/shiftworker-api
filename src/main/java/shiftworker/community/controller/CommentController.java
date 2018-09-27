@@ -59,6 +59,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/{id}")
+    @ApiImplicitParam(name = "Authorization", value = "사용자 인증 토큰", required = true, dataType = "String", paramType = "header")
     public HttpStatus deleteComment(@LoginUser User user, @PathVariable long id) {
         commentService.delete(id, user);
         return HttpStatus.NO_CONTENT;

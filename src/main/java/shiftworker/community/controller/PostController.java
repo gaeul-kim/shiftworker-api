@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -59,9 +60,16 @@ public class PostController {
     }
 
     @DeleteMapping("/{id}")
+    @ApiImplicitParam(name = "Authorization", value = "사용자 인증 토큰", required = true, dataType = "String", paramType = "header")
     public HttpStatus deletePost(@LoginUser User user, @PathVariable long id) {
         postService.delete(id, user);
         return HttpStatus.NO_CONTENT;
+    }
+
+    @PutMapping("/{id}")
+    @ApiImplicitParam(name = "Authorization", value = "사용자 인증 토큰", required = true, dataType = "String", paramType = "header")
+    public PostDto updatePost(@LoginUser User user, @PathVariable long id, @RequestBody PostDto postDto) {
+        return PostDto.of(postService.update(id, Post.of(postDto.getTitle(), postDto.getContent()), user), false);
     }
 
     @PostMapping

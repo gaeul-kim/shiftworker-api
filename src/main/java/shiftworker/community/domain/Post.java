@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Where;
 import org.springframework.util.StringUtils;
-import shiftworker.community.exception.DuplicatedReportException;
 import shiftworker.community.exception.UnAuthenticationException;
 
 import javax.persistence.Column;
@@ -71,27 +70,26 @@ public class Post extends BaseEntity {
         this.content = content;
     }
 
-    private void checkDuplicatedReport(User user) {
-        this.reports.stream()
-                .filter(report -> report.matchUser(user))
-                .findAny()
-                .ifPresent(report -> new DuplicatedReportException());
-    }
-
-    public void report(Report report) {
-        checkDuplicatedReport(report.getUser());
-        this.reports.add(report);
-    }
-
     public Post increaseViewCount() {
         this.viewCount++;
         return this;
     }
 
     public void delete(User user) {
+        checkAuthentication(user);
+        this.deleted = true;
+    }
+
+    public Post update(Post post, User user) {
+        checkAuthentication(user);
+        setTitle(post.getTitle());
+        setContent(post.getContent());
+        return this;
+    }
+
+    private void checkAuthentication(User user) {
         if (!this.author.matchUsername(user)) {
             throw new UnAuthenticationException();
         }
-        this.deleted = true;
     }
 }
