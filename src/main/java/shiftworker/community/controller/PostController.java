@@ -11,6 +11,8 @@ import lombok.Setter;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -54,7 +56,12 @@ public class PostController {
     @GetMapping("/{id}")
     public PostDto getPost(@PathVariable long id, @RequestParam(required = false, defaultValue = "FALSE") boolean comments) {
         return PostDto.of(postService.getByIdAndIncreaseViewCount(id), comments);
+    }
 
+    @DeleteMapping("/{id}")
+    public HttpStatus deletePost(@LoginUser User user, @PathVariable long id) {
+        postService.delete(id, user);
+        return HttpStatus.NO_CONTENT;
     }
 
     @PostMapping

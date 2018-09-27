@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.StringUtils;
 import shiftworker.community.exception.DuplicatedReportException;
+import shiftworker.community.exception.UnAuthenticationException;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -83,5 +84,12 @@ public class Post extends BaseEntity {
     public Post increaseViewCount() {
         this.viewCount++;
         return this;
+    }
+
+    public void delete(User user) {
+        if (!this.author.matchUsername(user)) {
+            throw new UnAuthenticationException();
+        }
+        this.deleted = true;
     }
 }

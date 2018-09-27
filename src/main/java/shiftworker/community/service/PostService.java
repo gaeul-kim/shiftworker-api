@@ -44,4 +44,9 @@ public class PostService {
     public Post write(Post post, User user) {
         return postRepository.save(post.setAuthor(user));
     }
+
+    @Transactional
+    public void delete(long id, User user) {
+        getById(id).delete(user);
+    }
 }

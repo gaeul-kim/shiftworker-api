@@ -62,6 +62,10 @@ public class User extends BaseEntity {
         return this.id == id;
     }
 
+    public boolean matchUsername(User user) {
+        return this.username.equals(user.username);
+    }
+
     public boolean matchPassword(String password) {
         return BCrypt.checkpw(password, this.password);
     }
