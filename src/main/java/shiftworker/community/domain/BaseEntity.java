@@ -7,6 +7,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -28,10 +29,12 @@ public class BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected long id;
 
+    @Column(nullable = false)
     @JsonIgnore
     @CreatedDate
     protected LocalDateTime createdDate;
 
+    @Column(nullable = false)
     @JsonIgnore
     @LastModifiedDate
     protected LocalDateTime modifiedDate;

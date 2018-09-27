@@ -7,7 +7,6 @@ import org.springframework.util.StringUtils;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 /**
@@ -20,13 +19,12 @@ public class Comment extends BaseEntity {
 
     @JsonIgnore
     @ManyToOne(optional = false)
-    @JoinColumn(name = "post_id")
     private Post post;
 
     @Column(nullable = false, columnDefinition = "text")
     private String content;
 
-    @ManyToOne(targetEntity = User.class)
+    @ManyToOne(optional = false)
     private User author;
 
     private boolean deleted;

@@ -26,13 +26,13 @@ public class Post extends BaseEntity {
     @Column(nullable = false, columnDefinition = "text")
     private String content;
 
-    @ManyToOne(targetEntity = User.class)
+    @ManyToOne(optional = false)
     private User author;
 
-    @OneToMany(targetEntity = Comment.class, mappedBy = "post")
+    @OneToMany(mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(targetEntity = Report.class, mappedBy = "post")
+    @OneToMany(mappedBy = "post")
     private List<Report> reports = new ArrayList<>();
 
     private boolean deleted;

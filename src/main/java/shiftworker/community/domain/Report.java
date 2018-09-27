@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import shiftworker.community.controller.ReportController;
 import shiftworker.community.domain.type.ReportReason;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -24,6 +25,7 @@ public class Report extends BaseEntity {
     @ManyToOne(optional = false)
     private User user;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ReportReason reason;
 
