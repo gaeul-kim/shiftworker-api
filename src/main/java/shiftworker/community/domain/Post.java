@@ -3,6 +3,7 @@ package shiftworker.community.domain;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.StringUtils;
+import shiftworker.community.exception.DuplicatedReportException;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,6 +31,9 @@ public class Post extends BaseEntity {
 
     @OneToMany(targetEntity = Comment.class, mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(targetEntity = Report.class, mappedBy = "post")
+    private List<Report> reports = new ArrayList<>();
 
     private boolean deleted;
 
@@ -62,6 +66,18 @@ public class Post extends BaseEntity {
             throw new IllegalArgumentException("내용이 입력되지 않았습니다");
         }
         this.content = content;
+    }
+
+    private void checkDuplicatedReport(User user) {
+        this.reports.stream()
+                .filter(report -> report.matchUser(user))
+                .findAny()
+                .ifPresent(report -> new DuplicatedReportException());
+    }
+
+    public void report(Report report) {
+        checkDuplicatedReport(report.getUser());
+        this.reports.add(report);
     }
 
     public Post increaseViewCount() {
