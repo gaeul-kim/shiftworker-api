@@ -87,6 +87,9 @@ public class PostController {
         private int commentsCount;
 
         @ApiModelProperty(hidden = true)
+        private int reportCount;
+
+        @ApiModelProperty(hidden = true)
         private String author;
 
         @ApiModelProperty(hidden = true)
@@ -100,6 +103,7 @@ public class PostController {
                     .author(post.getAuthor().getUsername())
                     .createdDate(post.getFormattedCreateDate())
                     .viewCount(post.getViewCount())
+                    .reportCount(post.getReports().size())
                     .commentsCount(Math.toIntExact(post.getComments()
                             .stream()
                             .filter(comment -> !comment.isDeleted())
@@ -121,6 +125,7 @@ public class PostController {
                     .author(post.getAuthor().getUsername())
                     .createdDate(post.getFormattedCreateDate())
                     .viewCount(post.getViewCount())
+                    .reportCount(post.getReports().size())
                     .commentsCount(post.getComments().size())
                     .comments(Collections.emptyList())
                     .build();

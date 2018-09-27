@@ -58,6 +58,10 @@ public class User extends BaseEntity {
         }
     }
 
+    public boolean matchId(long id) {
+        return this.id == id;
+    }
+
     public boolean matchPassword(String password) {
         return BCrypt.checkpw(password, this.password);
     }
