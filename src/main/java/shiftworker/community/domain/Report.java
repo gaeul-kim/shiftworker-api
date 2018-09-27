@@ -6,6 +6,8 @@ import shiftworker.community.controller.ReportController;
 import shiftworker.community.domain.type.ReportReason;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
 
 /**
@@ -22,6 +24,7 @@ public class Report extends BaseEntity {
     @ManyToOne(optional = false)
     private User user;
 
+    @Enumerated(EnumType.STRING)
     private ReportReason reason;
 
     private String description;
