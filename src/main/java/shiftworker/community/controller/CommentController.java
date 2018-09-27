@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -65,6 +66,12 @@ public class CommentController {
         return HttpStatus.NO_CONTENT;
     }
 
+    @PutMapping("/{id}")
+    @ApiImplicitParam(name = "Authorization", value = "사용자 인증 토큰", required = true, dataType = "String", paramType = "header")
+    public CommentDto updateComment(@LoginUser User user, @PathVariable long id, @RequestBody CommentUpdateDto commentUpdateDto) {
+        return CommentDto.of(commentService.update(id, commentUpdateDto.getContent(), user));
+    }
+
     @Getter
     @Setter
     @Builder
@@ -94,5 +101,12 @@ public class CommentController {
                     .createdDate(comment.getFormattedCreateDate())
                     .build();
         }
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class CommentUpdateDto {
+        private String content;
     }
 }

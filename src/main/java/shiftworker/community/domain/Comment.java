@@ -49,9 +49,19 @@ public class Comment extends BaseEntity {
     }
 
     public void delete(User user) {
+        checkAuthentication(user);
+        this.deleted = true;
+    }
+
+    public Comment update(String content, User user) {
+        checkAuthentication(user);
+        setContent(content);
+        return this;
+    }
+
+    private void checkAuthentication(User user) {
         if (!this.author.matchUsername(user)) {
             throw new UnAuthenticationException();
         }
-        this.deleted = true;
     }
 }

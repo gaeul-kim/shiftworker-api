@@ -27,7 +27,7 @@ public class CommentService {
         return commentRepository.save(comment);
     }
 
-    public Comment getById(long id) {
+    private Comment getById(long id) {
         return commentRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(CommentNotFoundException::new);
     }
@@ -35,5 +35,10 @@ public class CommentService {
     @Transactional
     public void delete(long id, User user) {
         getById(id).delete(user);
+    }
+
+    @Transactional
+    public Comment update(long id, String content, User user) {
+        return getById(id).update(content, user);
     }
 }
