@@ -2,6 +2,7 @@ package shiftworker.community.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
 import org.springframework.util.StringUtils;
 import shiftworker.community.exception.DuplicatedReportException;
 import shiftworker.community.exception.UnAuthenticationException;
@@ -31,6 +32,7 @@ public class Post extends BaseEntity {
     private User author;
 
     @OneToMany(mappedBy = "post")
+    @Where(clause = "deleted = 'false'")
     private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "post")
